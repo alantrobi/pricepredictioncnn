@@ -1,22 +1,35 @@
-# 📊 Stock Price Prediction using CNN on Spectrogram Images
+# PRICE PREDICTION WITH CNN
+
+**Alan T. Robi**
+**TCR24CS009**
 
 ---
 
-## 🔍 Overview
+## Overview
 
-This project builds a full pipeline to predict stock price movement using:
+This project presents a complete pipeline for predicting stock price movement using:
 
-* Signal processing (FFT, STFT)
-* Spectrogram image generation
-* CNN-based regression
+* Signal processing techniques (FFT, STFT)
+* Spectrogram-based image representation
+* Convolutional Neural Network (CNN)
 
-The system converts financial time-series data into **images**, allowing a CNN to learn patterns and predict future price changes.
+The system transforms financial time-series data into image representations and uses a CNN to learn patterns and predict future price changes.
 
 ---
 
-# ⚙️ Initial Setup (IMPORTANT)
+## Why Virtual Environment (venv)?
 
-Before running the project:
+A virtual environment is used to:
+
+* Ensure all required libraries are installed correctly
+* Avoid conflicts with other Python projects
+* Maintain reproducibility across systems
+
+Without a virtual environment, different library versions may cause the code to fail. Using `venv` ensures consistent execution.
+
+---
+
+## Setup
 
 ```bash
 python -m venv venv
@@ -26,81 +39,39 @@ pip install -r requirements.txt
 
 ---
 
-# 📁 Project Structure (Generated Automatically)
+## Execution
 
-> ⚠️ Note: Most folders are **NOT present initially**.
-> They are **created automatically by the Python scripts**.
+Run the complete pipeline:
 
-```text
+```bash
+python main.py
+```
+
+Each Python file executes sequentially and produces outputs required for the next stage.
+
+---
+
+## download_data.py
+
+### Function
+
+Downloads market-related time-series data:
+
+* Stock prices (TCS, Bajaj, Vedanta)
+* Sensex index
+* USD/INR exchange rate
+
+### Note
+
+Revenue and profit data are not downloaded here.
+They are manually defined in `prepare_data.py`.
+
+### Output
+
+```
 data/
-    processed/
-        bajaj.csv
-        tcs.csv
-        vedanta.csv
-
-dataset_img/
-    bajaj/
-    tcs/
-    vedanta/
-
-outputs/
-    frequency/
-    spectrograms/
-    bajaj_prediction.png
-    tcs_prediction.png
-    vedanta_prediction.png
-```
-
----
-
-# 🚀 Pipeline (Execution Order)
-
-```text
-download_data.py
-→ prepare_data.py
-→ fft_analysis.py
-→ stft_analysis.py
-→ create_dataset_images.py
-→ cnn_regression_images.py
-→ predict_image.py
-```
-
----
-
-# 📁 1. download_data.py
-
-## 🔹 What it does
-
-Downloads **market-related time series data only**:
-
-```text
-✔ Stock prices (TCS, Bajaj, Vedanta)
-✔ Sensex index
-✔ USD/INR exchange rate
-```
-
----
-
-## 🔹 Important Clarification
-
-```text
-❌ Revenue and Profit are NOT downloaded
-```
-
-They are **manually defined inside**:
-
-```text
-prepare_data.py
-```
-
----
-
-## 🔹 Output
-
-```text
-data/
-    bajaj.csv
     tcs.csv
+    bajaj.csv
     vedanta.csv
     sensex.csv
     usd_inr.csv
@@ -108,232 +79,142 @@ data/
 
 ---
 
-# 📁 2. prepare_data.py
+## prepare_data.py
 
-## 🔹 What it does
+### Function
 
-This is a **critical data engineering step**.
+* Combines all features into a single dataset:
 
-It:
-
-1. Combines all data sources
-2. Adds financial data (revenue, profit)
-3. Aligns dates across datasets
-4. Performs interpolation and missing value handling
-
----
-
-## 🔹 Features created
-
-```text
-price
-revenue
-profit
-sensex
-usd_inr
-```
+  * price
+  * revenue
+  * profit
+  * sensex
+  * usd_inr
+* Aligns all data to a daily time scale
 
 ---
 
-## 🔹 Interpolation & Data Filling
+### Interpolation and Data Filling
 
-Because:
+Since:
 
-```text
-Stock → daily data
-Revenue/Profit → quarterly data
-```
+* Stock data is daily
+* Revenue and profit are quarterly
 
-👉 There are missing values.
+Missing values occur. These are handled using:
 
----
+* **Interpolation**: Smooth estimation between known values
+* **Forward/Backward filling**: Ensures no missing values remain
 
-### ✔ What we did:
-
-#### 1. Forward Fill
-
-```text
-Carry last known value forward
-```
-
-Used for:
-
-* revenue
-* profit
+This step is necessary because machine learning models require complete datasets.
 
 ---
 
-#### 2. Interpolation
+### Output
 
-```text
-Smoothly estimate missing values between known points
 ```
-
-Used for:
-
-* aligning datasets
-* filling gaps
-
----
-
-## 🔹 Why this is necessary
-
-```text
-CNN requires continuous, aligned data
-```
-
-Without filling:
-
-```text
-❌ Missing values → model breaks
-```
-
----
-
-## 🔹 Output
-
-```text
 data/processed/
     tcs.csv
     bajaj.csv
     vedanta.csv
 ```
 
----
-
-# 📁 3. fft_analysis.py
-
-## 🔹 What it does
-
-* Applies FFT to each feature
-* Generates frequency-domain graphs
+This processed data is used for all further analysis.
 
 ---
 
-## 🔹 Output
+## fft_analysis.py
 
-```text
+### Function
+
+Applies Fast Fourier Transform (FFT) to each feature.
+
+### Output
+
+```
 outputs/frequency/{company}/fft_*.png
 ```
 
+### Explanation
+
+* X-axis: Frequency
+* Y-axis: Magnitude (log scale)
+
+Log scaling is used to handle large differences in magnitude and improve visibility.
+
+### Insight
+
+Most energy appears in low frequencies, indicating that stock data is dominated by long-term trends.
+
 ---
 
-## 🔹 Why log scale?
+## stft_analysis.py
 
-```text
-Financial signals have large magnitude differences
+### Function
+
+Applies Short-Time Fourier Transform (STFT) to each feature.
+
+### Output
+
 ```
-
-Log scale helps:
-
-```text
-✔ visualize small + large frequencies
-✔ reveal hidden patterns
-```
-
----
-
-## 🔹 Insight
-
-```text
-Most energy is in low frequency → long-term trends dominate
-```
-
----
-
-# 📁 4. stft_analysis.py
-
-## 🔹 What it does
-
-* Applies STFT (Short-Time Fourier Transform)
-
----
-
-## 🔹 Output
-
-```text
 outputs/spectrograms/{company}/{feature}.png
 ```
 
+### Spectrogram Explanation
+
+* X-axis: Time
+* Y-axis: Frequency
+* Color: Magnitude
+
+This representation shows how frequency components change over time.
+
 ---
 
-## 🔹 What is a Spectrogram?
+## create_dataset_images.py
 
-```text
-Time vs Frequency vs Magnitude (color)
+### Function
+
+Creates the dataset used for CNN training.
+
+---
+
+### Process
+
+1. **Windowing**
+
+   * 128 days of data form one sample
+
+2. **Spectrogram Generation**
+
+   * Each feature is converted into a spectrogram
+
+3. **Feature Stacking**
+
+   * Five spectrograms are stacked vertically into a single image:
+
 ```
-
----
-
-## 🔹 Purpose
-
-```text
-Shows how frequency changes over time
-```
-
----
-
-# 📁 5. create_dataset_images.py
-
-## 🔹 What it does
-
-Creates the **CNN training dataset**
-
----
-
-## 🔹 Process
-
-### 1. Windowing
-
-```text
-Take 128 days → 1 sample
-```
-
----
-
-### 2. STFT per feature
-
-Each feature is converted into a spectrogram.
-
----
-
-### 3. Stack 5 features into ONE image
-
-```text
---------------------------------
 PRICE
---------------------------------
 REVENUE
---------------------------------
 PROFIT
---------------------------------
 SENSEX
---------------------------------
 USD_INR
---------------------------------
 ```
 
+4. **Resizing**
+
+   * Final image size is 128 × 128
+
+5. **Normalization**
+
+   * Signal normalization
+   * Spectrogram normalization
+   * Image scaling
+
 ---
 
-### 4. Resize
+### Output
 
-```text
-Final image = 128 × 128
 ```
-
----
-
-### 5. Normalize
-
-* Signal normalization
-* Spectrogram normalization
-* Image scaling (0–255)
-
----
-
-## 🔹 Output
-
-```text
 dataset_img/{company}/
 
 0.png
@@ -345,139 +226,112 @@ dataset_img/{company}/
 
 ---
 
-## 🔹 What is `.png`?
+### File Explanation
 
-```text
-Combined spectrogram image (input)
+**.png file**
+
+* Combined spectrogram image
+* Represents 128 days of multivariate data
+
+**.npy file**
+
+Stores the target value:
+
 ```
-
----
-
-## 🔹 What is `.npy`?
-
-```text
-Target value (label):
-
 (next_price - current_price) / current_price
 ```
 
-👉 Percentage price change
+This represents the percentage change in stock price.
 
 ---
 
-# 📁 6. cnn_regression_images.py
+## cnn_regression_images.py
 
-## 🔹 What it does
+### Function
 
-* Loads dataset
-* Trains CNN model
+* Loads dataset images and labels
+* Trains a CNN regression model
 
 ---
 
-## 🔹 Input
+### Input
 
-```text
-128 × 128 image
+```
+128 × 128 grayscale image
 ```
 
 ---
 
-## 🔹 Output
+### Output
 
-```text
+```
 {company}_img_model.keras
 ```
 
 ---
 
-## 🔹 What CNN learns
+### Learning Mechanism
 
-```text
-Patterns in spectrogram → price movement
-```
+The CNN does not explicitly know feature names.
+It learns patterns based on:
 
-It does NOT know features explicitly.
-
-It learns based on:
-
-```text
-Position + intensity + patterns
-```
+* Spatial structure
+* Intensity variations
+* Position of patterns within the image
 
 ---
 
-# 📁 7. predict_image.py
+## predict_image.py
 
-## 🔹 What it does
+### Function
 
-* Uses trained model
-* Predicts future price
+* Uses trained CNN model
+* Predicts future stock prices
 
 ---
 
-## 🔹 Output
+### Output
 
-```text
+```
 outputs/
-    bajaj_prediction.png
-    tcs_prediction.png
-    vedanta_prediction.png
+
+tcs_prediction.png
+bajaj_prediction.png
+vedanta_prediction.png
 ```
 
 ---
 
-## 🔹 Graph Meaning
+### Graph Explanation
 
-```text
-Actual Price vs Predicted Price
-```
+Displays:
+
+* Actual price
+* Predicted price
+
+This is used to evaluate model performance.
 
 ---
 
-# 🧠 Data Flow Summary
+## Data Flow Summary
 
-```text
+```
 Download Data
-→ Add financial data
-→ Clean & interpolate
-→ FFT (frequency understanding)
-→ STFT (time-frequency)
-→ Spectrogram images
-→ Dataset (image + label)
-→ CNN training
+→ Prepare and Interpolate
+→ FFT Analysis
+→ STFT (Spectrogram)
+→ Dataset Creation (Images + Labels)
+→ CNN Training
 → Prediction
 ```
 
 ---
 
-# 🏆 Key Concepts
+## Key Concepts
 
-## ✔ Why spectrograms?
-
-Convert time-series → image patterns
-
-## ✔ Why CNN?
-
-Best for pattern recognition
-
-## ✔ Why % change?
-
-Stable, scale-independent target
-
-## ✔ Why interpolation?
-
-Align different time frequencies (daily vs quarterly)
+* Spectrograms convert time-series data into image form
+* CNN models learn patterns from images
+* Normalization improves training stability
+* Predicting percentage change simplifies the learning task
 
 ---
-
-# ▶️ How to Run
-
-```bash
-python main.py
-```
-
----
-
-# 👨‍💻 Author
-
-Alan Robi
