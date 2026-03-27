@@ -23,7 +23,6 @@ A virtual environment is used to:
 
 * Ensure all required libraries are installed correctly
 * Avoid conflicts with other Python projects
-* Maintain reproducibility across systems
 
 Without a virtual environment, different library versions may cause the code to fail. Using `venv` ensures consistent execution.
 
@@ -332,8 +331,6 @@ It keeps only the virtual environment (`venv`) intact.
 
 * To rerun the entire pipeline from scratch
 * To clear corrupted or outdated outputs
-* Before testing the project on a new system
-* Before submission to ensure clean reproducibility
 
 ---
 
@@ -346,7 +343,7 @@ This script permanently deletes files. It should be used with caution.
 ## Data Flow Summary
 
 ```text
-Download Data
+→ Download Data
 → Prepare and Interpolate
 → FFT Analysis
 → STFT (Spectrogram)
