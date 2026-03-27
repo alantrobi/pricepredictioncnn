@@ -31,7 +31,7 @@ Without a virtual environment, different library versions may cause the code to 
 
 ## Setup
 
-```bash
+```bash id="q1k2ls"
 python -m venv venv
 venv\Scripts\activate   # Windows
 pip install -r requirements.txt
@@ -43,7 +43,7 @@ pip install -r requirements.txt
 
 Run the complete pipeline:
 
-```bash
+```bash id="7h4mzp"
 python main.py
 ```
 
@@ -68,7 +68,7 @@ They are manually defined in `prepare_data.py`.
 
 ### Output
 
-```
+```text
 data/
     tcs.csv
     bajaj.csv
@@ -106,20 +106,18 @@ Missing values occur. These are handled using:
 * **Interpolation**: Smooth estimation between known values
 * **Forward/Backward filling**: Ensures no missing values remain
 
-This step is necessary because machine learning models require complete datasets.
+This step ensures a continuous dataset suitable for machine learning.
 
 ---
 
 ### Output
 
-```
+```text
 data/processed/
     tcs.csv
     bajaj.csv
     vedanta.csv
 ```
-
-This processed data is used for all further analysis.
 
 ---
 
@@ -131,7 +129,7 @@ Applies Fast Fourier Transform (FFT) to each feature.
 
 ### Output
 
-```
+```text
 outputs/frequency/{company}/fft_*.png
 ```
 
@@ -156,7 +154,7 @@ Applies Short-Time Fourier Transform (STFT) to each feature.
 
 ### Output
 
-```
+```text
 outputs/spectrograms/{company}/{feature}.png
 ```
 
@@ -192,7 +190,7 @@ Creates the dataset used for CNN training.
 
    * Five spectrograms are stacked vertically into a single image:
 
-```
+```text
 PRICE
 REVENUE
 PROFIT
@@ -214,7 +212,7 @@ USD_INR
 
 ### Output
 
-```
+```text
 dataset_img/{company}/
 
 0.png
@@ -237,7 +235,7 @@ dataset_img/{company}/
 
 Stores the target value:
 
-```
+```text
 (next_price - current_price) / current_price
 ```
 
@@ -256,7 +254,7 @@ This represents the percentage change in stock price.
 
 ### Input
 
-```
+```text
 128 × 128 grayscale image
 ```
 
@@ -264,7 +262,7 @@ This represents the percentage change in stock price.
 
 ### Output
 
-```
+```text
 {company}_img_model.keras
 ```
 
@@ -292,7 +290,7 @@ It learns patterns based on:
 
 ### Output
 
-```
+```text
 outputs/
 
 tcs_prediction.png
@@ -313,9 +311,41 @@ This is used to evaluate model performance.
 
 ---
 
+## cleanup.py
+
+### Function
+
+Deletes generated data and model files to reset the project.
+
+---
+
+### What it removes
+
+* All generated folders (dataset, outputs, processed data, etc.)
+* All `.keras` model files
+
+It keeps only the virtual environment (`venv`) intact.
+
+---
+
+### When to use it
+
+* To rerun the entire pipeline from scratch
+* To clear corrupted or outdated outputs
+* Before testing the project on a new system
+* Before submission to ensure clean reproducibility
+
+---
+
+### Important Note
+
+This script permanently deletes files. It should be used with caution.
+
+---
+
 ## Data Flow Summary
 
-```
+```text
 Download Data
 → Prepare and Interpolate
 → FFT Analysis
@@ -333,5 +363,3 @@ Download Data
 * CNN models learn patterns from images
 * Normalization improves training stability
 * Predicting percentage change simplifies the learning task
-
----
