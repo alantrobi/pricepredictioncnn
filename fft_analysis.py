@@ -38,7 +38,6 @@ for company, path in companies.items():
 
         signal = df[feature].values
 
-        # 🔥 Remove DC component
         signal = signal - np.mean(signal)
 
         fft_vals = np.fft.fft(signal)
