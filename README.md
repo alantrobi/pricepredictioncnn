@@ -33,7 +33,7 @@ Without a virtual environment, different library versions may cause the code to 
 ## Setup
 
 Ensure python is installed in the device.
-In terminal, change the working directory to the directory where every python files exist.
+In terminal, change the working directory to the directory where every downloaded python files exist.
 
 ### Windows
 
