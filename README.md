@@ -32,11 +32,22 @@ Without a virtual environment, different library versions may cause the code to 
 
 ## Setup
 
-In terminal (windows) , change the working directory to the directory where every python files exist.
+Ensure python is installed in the device.
+In terminal, change the working directory to the directory where every python files exist.
 
-```bash id="q1k2ls"
+### Windows
+
+```bash
 python -m venv venv
-venv\Scripts\activate  # Windows
+venv\Scripts\activate
+pip install -r requirements.txt
+```
+
+### Linux / macOS
+
+```bash
+python3 -m venv venv
+source venv/bin/activate
 pip install -r requirements.txt
 ```
 
