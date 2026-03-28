@@ -5,7 +5,7 @@ import os
 import cv2
 
 L = 128
-H = 16   # 🔥 more data
+H = 16
 features = ["price", "revenue", "profit", "sensex", "usd_inr"]
 
 def create_dataset_for_company(csv_path, company):
@@ -52,7 +52,6 @@ def create_dataset_for_company(csv_path, company):
 
         cv2.imwrite(f"{base}/{sample_id}.png", combined)
 
-        # 🔥 TARGET = % CHANGE
         next_price = df["price"].iloc[i+L]
         current_price = df["price"].iloc[i+L-1]
 
