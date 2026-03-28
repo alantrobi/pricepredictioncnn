@@ -32,6 +32,8 @@ Without a virtual environment, different library versions may cause the code to 
 
 ## Setup
 
+In terminal (windows) , change the working directory to the directory where every python files exist.
+
 ```bash id="q1k2ls"
 python -m venv venv
 venv\Scripts\activate  # Windows
