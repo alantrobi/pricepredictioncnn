@@ -1,6 +1,7 @@
 import subprocess
+import sys
 
-steps = [
+scripts = [
     "download_data.py",
     "prepare_data.py",
     "fft_analysis.py",
@@ -12,13 +13,12 @@ steps = [
 
 print("\n🚀 PIPELINE STARTED\n")
 
-for step in steps:
-    print(f"\n▶ Running: {step}")
+for script in scripts:
+    print(f"\n▶ Running: {script}")
+    result = subprocess.run([sys.executable, script])
 
-    try:
-        subprocess.run(["python", step], check=True)
-    except subprocess.CalledProcessError:
-        print(f"\n❌ Error in {step}. Stopping.")
+    if result.returncode != 0:
+        print(f"\n❌ Error in {script}. Stopping.")
         break
 
-print("\n✅ DONE\n")
+print("\n✅ DONE")
