@@ -25,7 +25,8 @@ A virtual environment is used to:
 * Avoid conflicts with other Python projects
 
 Without a virtual environment, different library versions may cause the code to fail. Using `venv` ensures consistent execution.
-<img width="134" height="50" alt="image" src="https://github.com/user-attachments/assets/671a0fa8-9423-4aa2-ac10-05c1fde81e38" />
+<img width="121" height="44" alt="image" src="https://github.com/user-attachments/assets/f381b159-9a1a-46a2-92d1-0f005ceb7314" />
+
 
 ---
 
