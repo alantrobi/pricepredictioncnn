@@ -51,7 +51,7 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-```bash python3 ``` is used on Linux/macOS to explicitly ensure Python 3 is selected, since ```bash python ``` may point to an older version on some systems.
+```python3``` is used on Linux/macOS to explicitly ensure Python 3 is selected, since ```python``` may point to an older version on some systems.
 
 ---
 
