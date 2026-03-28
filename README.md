@@ -282,31 +282,70 @@ It learns patterns based on:
 
 ### Function
 
-* Uses trained CNN model
-* Predicts future stock prices
+This file uses the trained CNN model to generate predictions from the spectrogram image dataset.
+
+For every dataset image:
+
+* the corresponding 128-day input window is loaded
+* the CNN predicts the **next price percentage change**
+* the predicted percentage change is converted back into the **actual stock price**
+* the result is compared with the real stock price
 
 ---
 
-### Output
+### Outputs Produced
+
+This file produces **two outputs for each company** inside the `outputs/` folder:
 
 ```text
-outputs/
-
-tcs_prediction.png
-bajaj_prediction.png
-vedanta_prediction.png
+{company}_prediction.png
+{company}_prediction_table.png
 ```
 
 ---
 
-### Graph Explanation
+### 1) Prediction Graph
 
-Displays:
+The graph shows:
 
-* Actual price
-* Predicted price
+* Actual stock price
+* Predicted stock price
 
-This is used to evaluate model performance.
+This is used to visually compare model performance over all prediction samples.
+
+---
+
+### 2) Prediction Table
+
+A complete prediction table is also generated and saved as:
+
+```text
+{company}_prediction_table.png
+```
+
+The table contains:
+
+* **Date** → exact date for which the prediction is made
+* **Actual** → real stock price on that date
+* **Predicted** → CNN predicted stock price
+* **Difference** → actual − predicted
+
+---
+
+### What dates are predicted?
+
+Predictions are **not made for every single day**.
+
+The dataset was created using:
+
+* **Window length = 128 days**
+* **Hop size = 16**
+
+This means:
+
+* each image uses 128 days as input
+* the next prediction corresponds to the **day immediately after that 128-day window**
+* the next sample starts 16 rows later
 
 ---
 
