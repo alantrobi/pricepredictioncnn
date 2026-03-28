@@ -25,6 +25,7 @@ A virtual environment is used to:
 * Avoid conflicts with other Python projects
 
 Without a virtual environment, different library versions may cause the code to fail. Using `venv` ensures consistent execution.
+<img width="134" height="50" alt="image" src="https://github.com/user-attachments/assets/671a0fa8-9423-4aa2-ac10-05c1fde81e38" />
 
 ---
 
@@ -33,9 +34,6 @@ Without a virtual environment, different library versions may cause the code to 
 ```bash id="q1k2ls"
 python -m venv venv
 venv\Scripts\activate  # Windows
-
-<img width="134" height="50" alt="image" src="https://github.com/user-attachments/assets/b46a3f87-2121-4216-960a-eef3cfb8a22f" />
-
 pip install -r requirements.txt
 ```
 
